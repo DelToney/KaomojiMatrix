@@ -24,5 +24,5 @@ void SpectrumWave(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledMatrix)
       }
     }
   }
-  count++;
+  count+=2;
 }
