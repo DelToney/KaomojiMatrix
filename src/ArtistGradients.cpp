@@ -1,11 +1,18 @@
 #include "ArtistGradients.h"
 
 DEFINE_GRADIENT_PALETTE( madeon_gp ) {
-0,       199,193,3,
-64,      225,174,0,
-128,     217,171,13,
-192,     224,131,16,
-255,     224,126,7};
+0,       255,255,0,
+128,     225, 15, 0, 
+255,       255,255,0
+
+
+// 0,       255,255,0,
+// 64,      225,182,0,
+// 128,     255,128,0
+// 192,     224,131,16,
+// 255,     224,126,7
+
+};
 
 
 
@@ -15,35 +22,63 @@ void MadeonGradient(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledMatri
 
     colorPalette = madeon_gp;
     
-    DoGradient(ledMatrix, colorPalette);
+    DoHorizontalGradient(ledMatrix, colorPalette);
 
 }
 
 
 
-void DoGradient (cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledMatrix, CRGBPalette256 currentPalete)  {
+
+void DoHorizontalGradient (cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledMatrix, CRGBPalette256 currentPalete)  {
 
     static int count = 0;
-    static byte colorIndex;
+    static byte colorIndex = 0;
     for (int i = 0; i < NUM_ROWS; i++) {
+
+            
         for (int j = 0; j < ROW_LENGTH; j++) {
             int ledIndex = ledMatrixLayout[i][j];
             if (ledIndex != -1) {
 
-                // calc index so that the gradient appears forward and then reverse
-                colorIndex = (i > NUM_ROWS/2 ?
-                                ((256-(256/(NUM_ROWS/2))*(NUM_ROWS-i))%256) :
-                                ((256/(NUM_ROWS/2))*i)%256);
-
-
-
-                CRGB Color = ColorFromPalette(colorPalette, colorIndex, 5, LINEARBLEND);
+                colorIndex = (j*(256/ROW_LENGTH)+count)%256;
+                
+                CRGB Color = ColorFromPalette(colorPalette, colorIndex, 5, currentBlending);
                 ledMatrix(j, i).setRGB(Color.r, Color.g, Color.b);
-                // Serial.print((String)Color.b + " ");
+                
             }
         }
-        // Serial.println();
     }
-    
-    count+=2;
+
+    if (count >= 256) {
+        count = 0;
+    } else {
+        count+=2;
+    }
+}
+
+void DoVerticalGradient (cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledMatrix, CRGBPalette256 currentPalete)  {
+
+    static int count = 0;
+    static byte colorIndex = 0;
+    for (int i = 0; i < NUM_ROWS; i++) {
+
+            
+        for (int j = 0; j < ROW_LENGTH; j++) {
+            int ledIndex = ledMatrixLayout[i][j];
+            if (ledIndex != -1) {
+
+                colorIndex = (i*(256/NUM_ROWS)+count)%256;
+                
+                CRGB Color = ColorFromPalette(colorPalette, colorIndex, 5, currentBlending);
+                ledMatrix(j, i).setRGB(Color.r, Color.g, Color.b);
+                
+            }
+        }
+    }
+
+    if (count >= 256) {
+        count = 0;
+    } else {
+        count+=2;
+    }
 }

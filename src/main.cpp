@@ -75,7 +75,7 @@ void setup() {
 
 void loop() {  
   UpdateLEDStrip();
-  PrintMatrix();
+  // PrintMatrix();
 
 
 
