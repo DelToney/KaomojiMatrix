@@ -4,10 +4,7 @@
 #include "RainbowSpectrum.h"
 #include "ArtistGradients.h"
 #include "Common.h"
-#include "Adafruit_BLE.h"
-#include "Adafruit_BluefruitLE_SPI.h"
-#include "Adafruit_BluefruitLE_UART.h"
-// #include "packetparser.cpp"
+#include "packetparser.cpp"
 
 
 #include "BluefruitConfig.h"
@@ -79,25 +76,31 @@ void loop() {
 
 
 
+  EVERY_N_MILLISECONDS(100) {
 
-
-  if (CheckForInput()) {
-    
-    if (packetbuffer[1] == 'B') {
-      uint8_t button = packetbuffer[2];
-      if (button == 0x31) CurrentPattern = (LEDPattern)0;
-      if (button == 0x32) CurrentPattern = (LEDPattern)1;
-      if (button == 0x33) CurrentPattern = (LEDPattern)2;
+    if (CheckForInput()) {
+      //check and set the current LED pattern to what it is told to be
+      if (packetbuffer[1] == 'B') {
+        uint8_t button = packetbuffer[2];
+        uint8_t releaseCheck = packetbuffer[3];
+        if (button == 0x31) CurrentPattern = (LEDPattern)0;
+        if (button == 0x32) CurrentPattern = (LEDPattern)1;
+        if (button == 0x33) CurrentPattern = (LEDPattern)2;
+        if (button == 0x35 && releaseCheck == RELEASED) NextGradient();
+        if (button == 0x36 && releaseCheck == RELEASED) PrevGradient();
+      }
     }
-  };
+  }
 
+
+//add new pattern here as well
   switch (CurrentPattern)
   {
     case PSpectrumWave:{SpectrumWave(ledBuffer);
                         break;}
     case PSpectrumStatic:{SpectrumStatic(ledBuffer);
                         break;}
-    case PMadeonGradient:{MadeonGradient(ledBuffer);
+    case PArtistGradient:{DoArtistGradients(ledBuffer);
                         break;}
     
     default:
