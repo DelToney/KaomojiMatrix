@@ -1,10 +1,9 @@
 
 #include <string.h>
-#include "RainbowSlide.h"
 #include "RainbowSpectrum.h"
 #include "ArtistGradients.h"
 #include "Common.h"
-#include "packetparser.cpp"
+#include "packetparser.h"
 
 
 #include "BluefruitConfig.h"
@@ -175,17 +174,18 @@ void InitializeMatrix() {
 }
 
 void PrintString() {
-  int ledIndex = 0;
   for(int i = 0; i < NUM_LEDS; i++) {
+    int ledIndex = 0;
     // Serial.println("%i ", ledString[i].g);
   }
   Serial.println();
 }
 
 void PrintMatrix() {
-  int ledIndex = 0;
+  
   for(int i = 0; i < NUM_ROWS; i++) {
     for (int j = 0; j < ROW_LENGTH; j++) {
+      int ledIndex = 0;
       ledIndex = ledMatrixLayout[i][j];
       Serial.print(" " + (String)ledBuffer(j, i).r + ", " + (String)ledBuffer(j, i).g + ", " + (String)ledBuffer(j, i).b);
     }

@@ -20,7 +20,7 @@ void SpectrumWave(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledMatrix)
     {
       int ledIndex = ledMatrixLayout[i][j];
       if (ledIndex != -1) {
-        ledMatrix(j, i).setHSV((256/ROW_LENGTH)*j+count, 255, 50);
+        ledMatrix(j, i).setHSV((256/ROW_LENGTH)*j+count, 255, 200);
       }
     }
   }
