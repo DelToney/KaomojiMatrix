@@ -1,3 +1,6 @@
+#ifndef __PACKET_PARSER_INCLUDED__
+#define __PACKET_PARSER_INCLUDED__ 1
+
 #include <string.h>
 #include <Arduino.h>
 #include <SPI.h>
@@ -138,3 +141,4 @@ uint8_t readPacket(Adafruit_BLE *ble, uint16_t timeout)
   return replyidx;
 }
 
+#endif
