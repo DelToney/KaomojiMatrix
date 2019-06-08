@@ -14,10 +14,10 @@
 // const int ROW_LENGTH = 7;
 
 
-const int NUM_LEDS = 111;
-const int NUM_ROWS = 7;
-const int NUM_BUFFER_LEDS = 343;
-const int ROW_LENGTH = 45;
+const int NUM_LEDS PROGMEM = 111;
+const int NUM_ROWS PROGMEM = 7;
+const int NUM_BUFFER_LEDS PROGMEM = 343;
+const int ROW_LENGTH PROGMEM = 45;
 
 
 static CRGB ledString[NUM_LEDS];
@@ -34,7 +34,7 @@ static LEDPattern CurrentPattern = PArtistGradient;
 
 
 //this holds the template for the LED Matrix; 
-static int ledMatrixLayout[NUM_ROWS][ROW_LENGTH] 
+const int ledMatrixLayout[NUM_ROWS][ROW_LENGTH] PROGMEM
 // = { // test templpate
 //     {1,2,3,-1,14,15,16},
 //     {5,4,-1,-1,-1,18,17},
