@@ -7,13 +7,13 @@ DEFINE_GRADIENT_PALETTE( madeon_gp ) {
 };
 
 DEFINE_GRADIENT_PALETTE( porter_gp ) {
-  0,        244, 166, 251,
-  51,       204, 176, 248,
-  102,      191, 112, 227,
-  153,      128, 183, 251,
-  204,      128, 169, 236,
-  220,      120, 142, 174,
-  255,      244, 166, 251
+  0,        0xBF, 0x77, 0xB9,
+  51,       0x88, 0x2E, 0xE3, 
+  126,      0xB0, 0xA1, 0xED, 
+  153,      0x81, 0xA7, 0xDB, 
+  204,      0x7E, 0xA8, 0xE0, 
+  220,      0x4F, 0x6F, 0x9E, 
+  255,      0xBF, 0x77, 0xB9
 };
 
 DEFINE_GRADIENT_PALETTE(gjones_gp) {
@@ -39,16 +39,29 @@ DEFINE_GRADIENT_PALETTE( bonito_gp ) {
     214,    49, 99, 168,
     255,    140, 190, 168
 };
+
 DEFINE_GRADIENT_PALETTE( sparks_gp ) {
-0,       255,0,0,
-64,     38, 35, 15,
-128,     0, 255, 0, 
-192,    38, 35, 15,
-255,       255,0,0
+    0, 229, 30, 50,
+   84, 100, 11, 12,
+  168,   3, 28,  2,
+  255,  35,119, 10};
+
+DEFINE_GRADIENT_PALETTE( anamanaguchi_gp ) {
+0,   1,  2, 44,
+   84,   9, 11,112,
+  168,  77, 19,105,
+  255, 255,100,137
 };
 
 
-Artist currentArtist = Sparks;
+DEFINE_GRADIENT_PALETTE( cat_gp ) {
+    0, 101,  1,  1,
+  127, 115, 38, 62,
+  255, 220,144,132};
+
+
+
+Artist currentArtist = Porter;
 
 CRGBPalette256 colorPalette;
 TBlendType currentBlending = LINEARBLEND;
@@ -71,6 +84,12 @@ void DoArtistGradients(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledMa
         break;
     case Sparks:
         SparksGradient(ledMatrix);
+        break;
+    case Anamanaguchi:
+        AnamanaguchiGradient(ledMatrix);
+        break;
+    case Cat:
+        CatGradient(ledMatrix);
         break;
     default:
         break;
@@ -102,7 +121,7 @@ void MadeonGradient(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledMatri
 
 void PorterGradient(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledMatrix) {
     colorPalette = porter_gp;
-    DoHorizontalGradient(ledMatrix, colorPalette);
+    CrawlGradient(ledMatrix, colorPalette);
 }
 
 void GJonesGradient(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledMatrix) {
@@ -120,6 +139,16 @@ void SparksGradient(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledMatri
     DoHorizontalGradient(ledMatrix, colorPalette);
 }
 
+void AnamanaguchiGradient(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledMatrix) {
+    colorPalette = anamanaguchi_gp;
+    DoHorizontalGradient(ledMatrix, colorPalette);
+}
+
+void CatGradient(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledMatrix) {
+    colorPalette = cat_gp;
+    DoSmoothGradient(ledMatrix, colorPalette);
+}
+
 
 
 
@@ -135,6 +164,65 @@ void DoHorizontalGradient (cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> l
             if (ledIndex != -1) {
 
                 colorIndex = (j*(256/ROW_LENGTH)+count)%256;
+                
+                CRGB Color = ColorFromPalette(colorPalette, colorIndex, 60, currentBlending);
+                ledMatrix(j, i).setRGB(Color.r, Color.g, Color.b);
+                
+            }
+        }
+    }
+
+    if (count >= 256) {
+        count = 0;
+    } else {
+        count+=2;
+    }
+}
+
+void DoSmoothGradient (cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledMatrix, CRGBPalette256 currentPalete)  {
+
+    static int count = 0;
+    static byte colorIndex = 0;
+    for (int i = 0; i < NUM_ROWS; i++) {
+
+            
+        for (int j = 0; j < ROW_LENGTH; j++) {
+            int ledIndex = ledMatrixLayout[i][j];
+            if (ledIndex != -1) {
+                
+                // colorIndex = (j*(256/ROW_LENGTH)/2)%256;
+                // if (j>ROW_LENGTH/2) {
+                //     colorIndex = 256- colorIndex;
+                // }
+                
+                CRGB Color = ColorFromPalette(colorPalette, colorIndex, 60, currentBlending);
+                ledMatrix(j, i).setRGB(Color.r, Color.g, Color.b);
+                
+            }
+        }
+    }
+
+    if (count >= 256) {
+        count = 0;
+    } else {
+        count+=2;
+    }
+}
+void CrawlGradient (cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledMatrix, CRGBPalette256 currentPalete)  {
+
+    static int count = 0;
+    static byte colorIndex = 0;
+    for (int i = 0; i < NUM_ROWS; i++) {
+
+            
+        for (int j = 0; j < ROW_LENGTH; j++) {
+            int ledIndex = ledMatrixLayout[i][j];
+            if (ledIndex != -1) {
+                
+                colorIndex = (j*(256/ROW_LENGTH)*5+count)%256;
+                if (j>ROW_LENGTH/2) {
+                    colorIndex = 256 - colorIndex;
+                }
                 
                 CRGB Color = ColorFromPalette(colorPalette, colorIndex, 60, currentBlending);
                 ledMatrix(j, i).setRGB(Color.r, Color.g, Color.b);
