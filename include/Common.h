@@ -25,9 +25,10 @@ static CRGB ledString[NUM_LEDS];
 
 //add an enum value for every pattern
 enum LEDPattern {
-        PSpectrumStatic,
+        PThrillEffect,
         PSpectrumWave,
-        PArtistGradient
+        PArtistGradient,
+        
         };
         
 static LEDPattern CurrentPattern = PArtistGradient;

@@ -2,6 +2,7 @@
 #include <string.h>
 #include "RainbowSpectrum.h"
 #include "ArtistGradients.h"
+#include "ThrillEffect.h"
 #include "Common.h"
 #include "packetparser.h"
 
@@ -85,8 +86,12 @@ void loop() {
         if (button == 0x31) CurrentPattern = (LEDPattern)0;
         if (button == 0x32) CurrentPattern = (LEDPattern)1;
         if (button == 0x33) CurrentPattern = (LEDPattern)2;
-        if (button == 0x35 && releaseCheck == RELEASED) NextGradient();
-        if (button == 0x36 && releaseCheck == RELEASED) PrevGradient();
+        if (button == 0x35 && releaseCheck == RELEASED && CurrentPattern == PArtistGradient) NextGradient();
+        if (button == 0x36 && releaseCheck == RELEASED && CurrentPattern == PArtistGradient) PrevGradient();
+        if (button == 0x37 && releaseCheck == RELEASED && CurrentPattern == PArtistGradient) NextPattern();
+        if (button == 0x38 && releaseCheck == RELEASED && CurrentPattern == PArtistGradient) PrevPattern();
+        if (button == 0x35 && releaseCheck == RELEASED && CurrentPattern == PThrillEffect) IncreaseSpeed();
+        if (button == 0x36 && releaseCheck == RELEASED && CurrentPattern == PThrillEffect) DecreaseSpeed();
       }
     }
   }
@@ -97,7 +102,7 @@ void loop() {
   {
     case PSpectrumWave:{SpectrumWave(ledBuffer);
                         break;}
-    case PSpectrumStatic:{SpectrumStatic(ledBuffer);
+    case PThrillEffect:{ThrillEffect(ledBuffer);
                         break;}
     case PArtistGradient:{DoArtistGradients(ledBuffer);
                         break;}
@@ -154,6 +159,18 @@ void SetupBluetooth() {
   ble.setMode(BLUEFRUIT_MODE_DATA);
 
   Serial.println(F("***********************"));
+
+  /*
+  ************************************************************************************************
+  ************************************************************************************************
+  ************************************************************************************************
+  *************************************SARAH ITS THIS LINE****************************************
+  ************************************************************************************************
+  ************************************************************************************************
+  ************************************************************************************************
+  ************************************************************************************************
+   */
+  ble.sendCommandCheckOK(F("AT+GAPDEVNAME=Del's Outfit"));
 };
 
 boolean CheckForInput() {
