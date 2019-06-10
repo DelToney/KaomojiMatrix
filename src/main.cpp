@@ -20,6 +20,10 @@ extern uint8_t packetbuffer[];
 //Bluefruit Device
 Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_CS, BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_RST);
 
+long idleTimer = 180000;
+long current_millis;
+long input_millis = millis();
+
 
 //input manager
 
@@ -35,12 +39,15 @@ void PrintString();
 //fills the buffer with 0's
 void InitializeMatrix();
 
+bool IdleTimerCheck ();
 
 //Check bluetooth for input, 
 boolean CheckForInput();
 
 //sets up the bluetooth device
 void SetupBluetooth(); 
+
+void Randomize();
 
 // function prototypes over in packetparser.cpp
 uint8_t readPacket(Adafruit_BLE *ble, uint16_t timeout);
@@ -61,7 +68,6 @@ void printHex(const uint8_t * data, const uint32_t numBytes);
 
 void setup() {
   Serial.begin(9600);
-  // while (!Serial); 
   FastLED.addLeds<NEOPIXEL, LED_STRING_1>(ledString, NUM_LEDS);
 
   
@@ -72,7 +78,7 @@ void setup() {
 
 void loop() {  
   UpdateLEDStrip();
-  // PrintMatrix();
+ 
 
 
 
@@ -83,22 +89,28 @@ void loop() {
       if (packetbuffer[1] == 'B') {
         uint8_t button = packetbuffer[2];
         uint8_t releaseCheck = packetbuffer[3];
-        if (button == 0x31) CurrentPattern = (LEDPattern)0;
-        if (button == 0x32) CurrentPattern = (LEDPattern)1;
-        if (button == 0x33) CurrentPattern = (LEDPattern)2;
-        if (button == 0x35 && releaseCheck == RELEASED && CurrentPattern == PArtistGradient) NextGradient();
-        if (button == 0x36 && releaseCheck == RELEASED && CurrentPattern == PArtistGradient) PrevGradient();
-        if (button == 0x37 && releaseCheck == RELEASED && CurrentPattern == PArtistGradient) NextPattern();
-        if (button == 0x38 && releaseCheck == RELEASED && CurrentPattern == PArtistGradient) PrevPattern();
-        if (button == 0x35 && releaseCheck == RELEASED && CurrentPattern == PThrillEffect) IncreaseSpeed();
-        if (button == 0x36 && releaseCheck == RELEASED && CurrentPattern == PThrillEffect) DecreaseSpeed();
+        if (button == 0x31) CurrentLEDPattern = (LEDPattern)0;
+        if (button == 0x32) CurrentLEDPattern = (LEDPattern)1;
+        if (button == 0x33) CurrentLEDPattern = (LEDPattern)2;
+        if (button == 0x35 && releaseCheck == RELEASED && CurrentLEDPattern == PArtistGradient) NextGradient();
+        if (button == 0x36 && releaseCheck == RELEASED && CurrentLEDPattern == PArtistGradient) PrevGradient();
+        if (button == 0x37 && releaseCheck == RELEASED && CurrentLEDPattern == PArtistGradient) NextPattern();
+        if (button == 0x38 && releaseCheck == RELEASED && CurrentLEDPattern == PArtistGradient) PrevPattern();
+        if (button == 0x35 && releaseCheck == RELEASED && CurrentLEDPattern == PThrillEffect) IncreaseSpeed();
+        if (button == 0x36 && releaseCheck == RELEASED && CurrentLEDPattern == PThrillEffect) DecreaseSpeed();
       }
+      input_millis = millis();
     }
+  }
+  current_millis = millis();
+  if (IdleTimerCheck()) {
+    Randomize();
   }
 
 
+
 //add new pattern here as well
-  switch (CurrentPattern)
+  switch (CurrentLEDPattern)
   {
     case PSpectrumWave:{SpectrumWave(ledBuffer);
                         break;}
@@ -125,11 +137,18 @@ void loop() {
 
 
 
+void Randomize() {
+  RandomizeArtistGradient();
+  CurrentLEDPattern = PArtistGradient;
+}
 
-
-
-
-
+bool IdleTimerCheck () {
+  if (current_millis - input_millis >= idleTimer) {
+    input_millis = millis();
+    return true;
+  }
+  return false;
+}
 
 void SetupBluetooth() {  
   if (!ble.begin()) Serial.println("Couldn't find Bluefruit, make sure it's in CoMmanD mode & check wiring?");

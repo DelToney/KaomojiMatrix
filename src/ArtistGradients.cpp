@@ -329,7 +329,7 @@ void DoVerticalGradient(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledM
 {
 
     int count = 0;
-    byte colorIndex = 0;
+    static byte colorIndex = 0;
     for (int i = 0; i < NUM_ROWS; i++)
     {
         for (int j = 0; j < ROW_LENGTH; j++)
@@ -338,7 +338,7 @@ void DoVerticalGradient(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledM
             if (ledIndex != -1)
             {
 
-                colorIndex = (i * (256 / NUM_ROWS) + count) % 256;
+                colorIndex = sin8((i * (256 / NUM_ROWS) + count) % 256);
 
                 CRGB Color = ColorFromPalette(colorPalette, colorIndex, 60, currentBlending);
                 ledMatrix(j, i).setRGB(Color.r, Color.g, Color.b);
@@ -386,4 +386,10 @@ void DoWeirdSinWaveThingGradient(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MAT
     {
         count += 2;
     }
+}
+
+
+void RandomizeArtistGradient() {
+    currentArtist = (Artist)(rand()%NUM_ARTISTS);
+    currentPattern = (Pattern)(rand()%NUM_PATTERNS);
 }
