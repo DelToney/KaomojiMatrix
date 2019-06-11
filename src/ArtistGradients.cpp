@@ -66,8 +66,8 @@ DEFINE_GRADIENT_PALETTE(sarah_gp){
     0, 0, 255, 255,
     255, 255, 0, 255};
 
-Artist currentArtist = Wednesday;
-Pattern currentPattern = Smooth;
+Artist currentArtist = Nina;
+Pattern currentPattern = Vertical;
 
 CRGBPalette256 colorPalette;
 TBlendType currentBlending = LINEARBLEND;
@@ -124,7 +124,10 @@ void PrevGradient()
     int temp = currentArtist;
     int numArtists = (int)NUM_ARTISTS;
     temp--;
-    Serial.println(temp);
+    if (temp == -1) {
+        currentArtist = (Artist)(numArtists - 1);
+        return;
+    }
     currentArtist = (Artist)(temp % numArtists);
 }
 
@@ -141,6 +144,10 @@ void PrevPattern()
     int temp = currentPattern;
     int numPatterns = (int)NUM_PATTERNS;
     temp--;
+    if (temp == -1) {
+        currentPattern = (Pattern)(numPatterns - 1);
+        return;
+    }
     currentPattern = (Pattern)(temp % numPatterns);
 }
 
@@ -165,6 +172,7 @@ void DoPattern(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledMatrix) {
     default:
         break;
     }
+    Serial.println(currentPattern);
 }
 
 void MadeonGradient(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledMatrix)
@@ -304,10 +312,7 @@ void CrawlGradient(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledMatrix
             {
 
                 colorIndex = (j * (256 / ROW_LENGTH) * 5 + count) % 256;
-                if (j > ROW_LENGTH / 2)
-                {
-                    colorIndex = 256 - colorIndex;
-                }
+                
 
                 CRGB Color = ColorFromPalette(colorPalette, colorIndex, 60, currentBlending);
                 ledMatrix(j, i).setRGB(Color.r, Color.g, Color.b);
@@ -328,7 +333,7 @@ void CrawlGradient(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledMatrix
 void DoVerticalGradient(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledMatrix)
 {
 
-    int count = 0;
+    static int count = 0;
     static byte colorIndex = 0;
     for (int i = 0; i < NUM_ROWS; i++)
     {
@@ -338,9 +343,9 @@ void DoVerticalGradient(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledM
             if (ledIndex != -1)
             {
 
-                colorIndex = sin8((i * (256 / NUM_ROWS) + count) % 256);
+                colorIndex = sin8((i * (256 / NUM_ROWS )+ count ) % 256 );
 
-                CRGB Color = ColorFromPalette(colorPalette, colorIndex, 60, currentBlending);
+                CRGB Color = ColorFromPalette(colorPalette, colorIndex , 60, currentBlending);
                 ledMatrix(j, i).setRGB(Color.r, Color.g, Color.b);
             }
         }
@@ -352,7 +357,9 @@ void DoVerticalGradient(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledM
     }
     else
     {
-        count += 2;
+        
+        count++;
+        
     }
 }
 
@@ -378,13 +385,16 @@ void DoWeirdSinWaveThingGradient(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MAT
         }
     }
 
+
     if (count >= 256)
     {
         count = 0;
     }
     else
     {
-        count += 2;
+        
+        count++;
+        
     }
 }
 
