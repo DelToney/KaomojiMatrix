@@ -68,6 +68,7 @@ void printHex(const uint8_t * data, const uint32_t numBytes);
 
 void setup() {
   Serial.begin(9600);
+  FastLED.setMaxPowerInVoltsAndMilliamps(5, 3);
   FastLED.addLeds<NEOPIXEL, LED_STRING_1>(ledString, NUM_LEDS);
 
   

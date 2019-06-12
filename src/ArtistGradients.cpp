@@ -66,11 +66,12 @@ DEFINE_GRADIENT_PALETTE(sarah_gp){
     0, 0, 255, 255,
     255, 255, 0, 255};
 
-Artist currentArtist = Nina;
-Pattern currentPattern = Vertical;
+Artist currentArtist = GJones;
+Pattern currentPattern = Smooth;
 
 CRGBPalette256 colorPalette;
 TBlendType currentBlending = LINEARBLEND;
+const int brightness = 60;
 
 void DoArtistGradients(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledMatrix)
 {
@@ -249,7 +250,7 @@ void DoHorizontalGradient(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> le
 
                 colorIndex = (j * (256 / ROW_LENGTH) + count) % 256;
 
-                CRGB Color = ColorFromPalette(colorPalette, colorIndex, 60, currentBlending);
+                CRGB Color = ColorFromPalette(colorPalette, colorIndex, brightness, currentBlending);
                 ledMatrix(j, i).setRGB(Color.r, Color.g, Color.b);
             }
         }
@@ -281,7 +282,7 @@ void DoSmoothGradient(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledMat
 
                 colorIndex = sin8((j * (256 / ROW_LENGTH) + count) % 256);
 
-                CRGB Color = ColorFromPalette(colorPalette, colorIndex, 60, currentBlending);
+                CRGB Color = ColorFromPalette(colorPalette, colorIndex, brightness, currentBlending);
                 ledMatrix(j, i).setRGB(Color.r, Color.g, Color.b);
             }
         }
@@ -314,7 +315,7 @@ void CrawlGradient(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledMatrix
                 colorIndex = (j * (256 / ROW_LENGTH) * 5 + count) % 256;
                 
 
-                CRGB Color = ColorFromPalette(colorPalette, colorIndex, 60, currentBlending);
+                CRGB Color = ColorFromPalette(colorPalette, colorIndex, brightness, currentBlending);
                 ledMatrix(j, i).setRGB(Color.r, Color.g, Color.b);
             }
         }
@@ -345,7 +346,7 @@ void DoVerticalGradient(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledM
 
                 colorIndex = sin8((i * (256 / NUM_ROWS )+ count ) % 256 );
 
-                CRGB Color = ColorFromPalette(colorPalette, colorIndex , 60, currentBlending);
+                CRGB Color = ColorFromPalette(colorPalette, colorIndex , brightness, currentBlending);
                 ledMatrix(j, i).setRGB(Color.r, Color.g, Color.b);
             }
         }
@@ -379,7 +380,7 @@ void DoWeirdSinWaveThingGradient(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MAT
 
                 colorIndex = (beatsin8(60, 0, 255) + j * (256 / ROW_LENGTH)) % 256;
 
-                CRGB Color = ColorFromPalette(colorPalette, colorIndex, 60, currentBlending);
+                CRGB Color = ColorFromPalette(colorPalette, colorIndex, brightness, currentBlending);
                 ledMatrix(j, i).setRGB(Color.r, Color.g, Color.b);
             }
         }
