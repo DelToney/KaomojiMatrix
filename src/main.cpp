@@ -20,7 +20,7 @@ extern uint8_t packetbuffer[];
 //Bluefruit Device
 Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_CS, BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_RST);
 
-long idleTimer = 180000;
+long idleTimer = 30000;
 long current_millis;
 long input_millis = millis();
 
@@ -68,7 +68,7 @@ void printHex(const uint8_t * data, const uint32_t numBytes);
 
 void setup() {
   Serial.begin(9600);
-  FastLED.setMaxPowerInVoltsAndMilliamps(5, 3);
+  FastLED.setMaxPowerInVoltsAndMilliamps(5, 3000);
   FastLED.addLeds<NEOPIXEL, LED_STRING_1>(ledString, NUM_LEDS);
 
   

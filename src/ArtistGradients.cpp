@@ -66,12 +66,12 @@ DEFINE_GRADIENT_PALETTE(sarah_gp){
     0, 0, 255, 255,
     255, 255, 0, 255};
 
-Artist currentArtist = GJones;
+Artist currentArtist = Porter;
 Pattern currentPattern = Smooth;
 
 CRGBPalette256 colorPalette;
 TBlendType currentBlending = LINEARBLEND;
-const int brightness = 60;
+const int brightness = 50;
 
 void DoArtistGradients(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledMatrix)
 {
@@ -83,9 +83,9 @@ void DoArtistGradients(cLEDMatrix<ROW_LENGTH, NUM_ROWS, HORIZONTAL_MATRIX> ledMa
     case Madeon:
         MadeonGradient(ledMatrix);
         break;
-    case GJones:
-        GJonesGradient(ledMatrix);
-        break;
+    // case GJones:
+    //     GJonesGradient(ledMatrix);
+    //     break;
     case Bonito:
         BonitoGradient(ledMatrix);
         break;

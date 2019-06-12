@@ -6,7 +6,7 @@ enum Artist
 {
     Madeon = 0,
     Porter,
-    GJones,
+    //GJones,
     Bonito,
     Sparks,
     Anamanaguchi,
